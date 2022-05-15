@@ -54,6 +54,32 @@
             android:textColor="?android:textColorPrimary"
             app:strokeColor="?android:textColorPrimary"
             app:strokeWidth="2dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:id="@+id/btn_create_dynamic_shortcuts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:text="@string/action_create_dynamic_shortcuts"
+            android:textSize="12sp"
+            android:textColor="?android:textColorPrimary"
+            app:strokeColor="?android:textColorPrimary"
+            app:strokeWidth="2dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:id="@+id/btn_clear_dynamic_shortcuts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:text="@string/action_clear_dynamic_shortcuts"
+            android:textSize="12sp"
+            android:textColor="?android:textColorPrimary"
+            app:strokeColor="?android:textColorPrimary"
+            app:strokeWidth="2dp"/>
     </LinearLayout>
 
 </ScrollView>

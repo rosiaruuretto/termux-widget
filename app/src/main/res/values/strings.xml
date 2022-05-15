@@ -18,6 +18,8 @@
         a require launcher icon/activity to function. You can optionally disable it if you want and
         can enabled in again either by reinstalling the app or from the &TERMUX_APP_NAME; app settings
         if the option has been implemented in your installed version."</string>
+    <string name="action_create_dynamic_shortcuts">Create Dynamic Shortcuts</string>
+    <string name="action_clear_dynamic_shortcuts">Clear Dynamic Shortcuts</string>
 
 
     <string name="title_widget">&TERMUX_APP_NAME;</string>
