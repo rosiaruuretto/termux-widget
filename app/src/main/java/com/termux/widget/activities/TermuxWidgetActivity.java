@@ -19,6 +19,7 @@ import com.termux.shared.logger.Logger;
 import com.termux.shared.packages.PackageUtils;
 import com.termux.shared.termux.TermuxConstants;
 import com.termux.widget.R;
+import com.termux.shared.shell.ShellUtils;
 import com.termux.widget.TermuxWidgetService;
 import com.termux.widget.TermuxCreateShortcutActivity;
 import com.termux.widget.NaturalOrderComparator;
@@ -118,7 +119,7 @@ public class TermuxWidgetActivity extends AppCompatActivity {
             builder.setIntent(TermuxCreateShortcutActivity.getExecutionIntent(context, item.mFile));
             builder.setShortLabel(item.mLabel);
 
-            File shortcutIconFile = TermuxCreateShortcutActivity.getShortcutIconFile(context, item.mFile);
+            File shortcutIconFile = TermuxCreateShortcutActivity.getShortcutIconFile(context, ShellUtils.getExecutableBasename(item.mFile));
             if (shortcutIconFile != null)
                 builder.setIcon(Icon.createWithBitmap(((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap()));
             else
