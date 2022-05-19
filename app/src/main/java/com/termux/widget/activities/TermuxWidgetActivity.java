@@ -22,7 +22,8 @@ import com.termux.widget.R;
 import com.termux.shared.shell.ShellUtils;
 import com.termux.widget.TermuxWidgetService;
 import com.termux.widget.TermuxCreateShortcutActivity;
-import com.termux.widget.NaturalOrderComparator;
+import com.termux.widget.TermuxWidgetUtils;
+import com.termux.widget.ShortcutFile;
 
 import java.io.File;
 import java.util.Arrays;
@@ -67,36 +68,6 @@ public class TermuxWidgetActivity extends AppCompatActivity {
         });
     }
 
-    private static void enumerateShortcutFiles(List<TermuxWidgetService.TermuxWidgetItem> items, File dir, boolean sorted) {
-        enumerateShortcutFiles(items, dir, sorted, 0);
-    }
-
-    private static void enumerateShortcutFiles(List<TermuxWidgetService.TermuxWidgetItem> items, File dir, boolean sorted, int depth) {
-        if (depth > 5) return;
-
-        File[] files = dir.listFiles(TermuxWidgetService.SHORTCUT_FILES_FILTER);
-
-        if (files == null) return;
-
-        if (sorted) {
-            Arrays.sort(files, (lhs, rhs) -> {
-                if (lhs.isDirectory() != rhs.isDirectory()) {
-                    return lhs.isDirectory() ? 1 : -1;
-                }
-                return NaturalOrderComparator.compare(lhs.getName(), rhs.getName());
-            });
-        }
-
-        for (File file : files) {
-            if (file.isDirectory()) {
-                enumerateShortcutFiles(items, file, sorted, depth + 1);
-            } else {
-                items.add(new TermuxWidgetService.TermuxWidgetItem(file, depth));
-            }
-        }
-
-    }
-
     @TargetApi(Build.VERSION_CODES.O)
     private void clearDynamicShortcuts(Context context) {
         ShortcutManager shortcutManager = (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
@@ -110,22 +81,12 @@ public class TermuxWidgetActivity extends AppCompatActivity {
         ShortcutManager shortcutManager = (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
         if (shortcutManager == null) return;
 
-        List<TermuxWidgetService.TermuxWidgetItem> items = new ArrayList<>();
-        enumerateShortcutFiles(items, TermuxConstants.TERMUX_SHORTCUT_SCRIPTS_DIR, false);
+        List<ShortcutFile> files = new ArrayList<>();
+        TermuxWidgetUtils.enumerateShortcutFiles(files, false);
 
         List<ShortcutInfo> shortcuts = new ArrayList<>();
-        for (TermuxWidgetService.TermuxWidgetItem item : items) {
-            ShortcutInfo.Builder builder = new ShortcutInfo.Builder(context, item.mFile);
-            builder.setIntent(TermuxCreateShortcutActivity.getExecutionIntent(context, item.mFile));
-            builder.setShortLabel(item.mLabel);
-
-            File shortcutIconFile = TermuxCreateShortcutActivity.getShortcutIconFile(context, ShellUtils.getExecutableBasename(item.mFile));
-            if (shortcutIconFile != null)
-                builder.setIcon(Icon.createWithBitmap(((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap()));
-            else
-                builder.setIcon(Icon.createWithResource(context, R.drawable.ic_launcher));
-
-            shortcuts.add(builder.build());
+        for (ShortcutFile file : files) {
+            shortcuts.add(file.getShortcut(context));
         }
 
         // Logger.showToast(context, context.getString(R.string.msg_request_create_pinned_shortcut,
