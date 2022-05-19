@@ -67,7 +67,7 @@ public final class ShortcutFile {
         return executionIntent;
     }
 
-    public ShortcutInfo getShortcut(Context context) {
+    public ShortcutInfo getShortcut(Context context, boolean logUsedIcon) {
         String path = file.getPath();
 
         ShortcutInfo.Builder builder = new ShortcutInfo.Builder(context, path);
@@ -75,7 +75,7 @@ public final class ShortcutFile {
         builder.setShortLabel(this.label);
 
         // Set icon if existent.
-        File shortcutIconFile = this.getIconFile(context);
+        File shortcutIconFile = this.getIconFile(context, logUsedIcon);
         if (shortcutIconFile != null)
             builder.setIcon(Icon.createWithBitmap(((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap()));
         else
@@ -90,7 +90,7 @@ public final class ShortcutFile {
         intent.putExtra(Intent.EXTRA_SHORTCUT_NAME, label);
 
         // Set icon if existent.
-        File shortcutIconFile = this.getIconFile(context);
+        File shortcutIconFile = this.getIconFile(context, true);
         if (shortcutIconFile != null)
             intent.putExtra(Intent.EXTRA_SHORTCUT_ICON, ((BitmapDrawable) Drawable.createFromPath(shortcutIconFile.getAbsolutePath())).getBitmap());
         else
@@ -114,7 +114,7 @@ public final class ShortcutFile {
     }
 
     @Nullable
-    private File getIconFile(Context context) {
+    private File getIconFile(Context context, boolean logUsedIcon) {
         String errmsg;
         String shortcutIconFilePath = FileUtils.getCanonicalPath(
                 TermuxConstants.TERMUX_SHORTCUT_SCRIPT_ICONS_DIR_PATH +
@@ -141,7 +141,9 @@ public final class ShortcutFile {
         }
 
         Logger.logInfo(LOG_TAG, "Using file at \"" + shortcutIconFilePath + "\" as shortcut icon file");
-        Logger.showToast(context, "Using file at \"" + shortcutIconFilePath + "\" as shortcut icon file", true);
+        if (logUsedIcon) {
+            Logger.showToast(context, "Using file at \"" + shortcutIconFilePath + "\" as shortcut icon file", true);
+        }
 
         return new File(shortcutIconFilePath);
     }
