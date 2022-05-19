@@ -120,6 +120,7 @@ Lookup the settings of your launcher to find such actions.
 
 Android forces a limit on how many shortcuts can be created per App.
 This can be easily changed if you have root permissions:
+
 `su -c 'settings put global shortcut_manager_constants max_shortcuts=1000'`
 
 #### `Draw Over Apps` permission (Optional)
