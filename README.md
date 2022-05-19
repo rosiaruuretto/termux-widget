@@ -86,7 +86,7 @@ Once you have created the directories, you can then create scripts files as per 
 
 Once you have created script files, you can add a launcher widget for the `Termux:Widget` app that will show the list of the script files, which you can execute by clicking them. If you create/modify shortcuts files, you will have to press the refresh button on the widget for the updated list to be shown. You can also refresh a specific widget by running `am broadcast -n com.termux.widget/.TermuxWidgetProvider -a com.termux.widget.ACTION_REFRESH_WIDGET --ei appWidgetId <id>` from Termux terminal/scripts for version `>= 0.13.0`, where `id` is the number in the `Termux shortcuts reloaded (<id>)` flash shown when you press the refresh button.
 
-You can also add a launcher shortcut for any script file with an optional custom icon as detailed in [Script Icon Directory](#script-icon-directory-optional).
+You can also add a launcher shortcut or dynamic shortcut for any script file with an optional custom icon as detailed in [Script Icon Directory](#script-icon-directory-optional).
 
 <img src="termux-widget.png" alt="" width="50%"/>
 
@@ -108,6 +108,19 @@ chmod -R a-x,u=rwX,go-rwx /data/data/com.termux/files/home/.shortcuts/icons
 ```
 The `chmod` command will set the `icons` directory permissions to `0700`, but any files already in the directory will be set to `0600` which is recommended.
 
+#### Dynamic Shortcuts (Optional)
+
+When using minimalistic launchers it can be useful to have all the shortcuts as so called dynamic shortcuts.
+These shortcuts are only displayed in some search bars and are for example used by your messaging apps to suggest you recent chats.
+Creating or clearing these can be simply done from the `Termux:Widget` App Gui.
+For some launchers it might be necessary to regenerate the app shortcuts to display them correctly.
+Lookup the settings of your launcher to find such actions.
+
+##### Android Shortcut Limit
+
+Android forces a limit on how many shortcuts can be created per App.
+This can be easily changed if you have root permissions:
+`su -c 'settings put global shortcut_manager_constants max_shortcuts=1000'`
 
 #### `Draw Over Apps` permission (Optional)
 
