@@ -15,7 +15,6 @@ import android.os.Build;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.termux.shared.logger.Logger;
 import com.termux.shared.packages.PackageUtils;
 import com.termux.shared.termux.TermuxConstants;
 import com.termux.widget.R;
@@ -24,6 +23,7 @@ import com.termux.widget.TermuxWidgetService;
 import com.termux.widget.TermuxCreateShortcutActivity;
 import com.termux.widget.TermuxWidgetUtils;
 import com.termux.widget.ShortcutFile;
+import com.termux.shared.logger.Logger;
 
 import java.io.File;
 import java.util.Arrays;
@@ -74,6 +74,7 @@ public class TermuxWidgetActivity extends AppCompatActivity {
         if (shortcutManager == null) return;
 
         shortcutManager.removeAllDynamicShortcuts();
+        Logger.showToast(context, "Removing dynamic shortcuts successful.", true);
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -89,20 +90,18 @@ public class TermuxWidgetActivity extends AppCompatActivity {
             shortcuts.add(file.getShortcut(context));
         }
 
-        // Logger.showToast(context, context.getString(R.string.msg_request_create_pinned_shortcut,
-        //         TermuxFileUtils.getUnExpandedTermuxPath(shortcutFilePath)), true);
-        // try {
-            // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            //     shortcutManager.pushDynamicShortcut(builder.build());
-            // } else {
+        // Remove shortcuts that can not be added.
+        int maximumShortcuts = shortcutManager.getMaxShortcutCountPerActivity();
+        if (shortcuts.size() > maximumShortcuts) {
+            Logger.logErrorAndShowToast(context, LOG_TAG, "Too many shorcuts. Commands to increase limit can be fonud in the readme. Current limit is: "+maximumShortcuts);
+            for (int i=0; i<shortcuts.size()-maximumShortcuts; i++) {
+                Logger.showToast(context, "Skipping "+shortcuts.get(shortcuts.size()-1).getShortLabel(), true);
+                shortcuts.remove(shortcuts.size()-1);
+            }
+        }
+
+        shortcutManager.removeAllDynamicShortcuts();
         shortcutManager.addDynamicShortcuts(shortcuts);
-            // }
-        // } catch (Exception e) {
-            // String message = context.getString(
-            //         isPinnedShortcutSupported ? R.string.error_create_pinned_shortcut_failed : R.string.error_create_static_shortcut_failed,
-            //         TermuxFileUtils.getUnExpandedTermuxPath(shortcutFilePath));
-            // Logger.logErrorAndShowToast(context, LOG_TAG, message + ": " + e.getMessage());
-            // Logger.logStackTraceWithMessage(LOG_TAG, message, e);
-        // }
+        Logger.showToast(context, "Adding dynamic shortcuts successful.", true);
     }
 }
