@@ -94,7 +94,7 @@ public class TermuxWidgetActivity extends AppCompatActivity {
         int maximumShortcuts = shortcutManager.getMaxShortcutCountPerActivity();
         if (shortcuts.size() > maximumShortcuts) {
             Logger.logErrorAndShowToast(context, LOG_TAG, "Too many shorcuts. Commands to increase limit can be fonud in the readme. Current limit is: "+maximumShortcuts);
-            for (int i=0; i<shortcuts.size()-maximumShortcuts; i++) {
+            while (shortcuts.size() > maximumShortcuts) {
                 Logger.showToast(context, "Skipping "+shortcuts.get(shortcuts.size()-1).getShortLabel(), true);
                 shortcuts.remove(shortcuts.size()-1);
             }
