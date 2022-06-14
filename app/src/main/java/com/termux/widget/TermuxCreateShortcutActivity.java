@@ -117,11 +117,6 @@ public class TermuxCreateShortcutActivity extends Activity {
 
     private void createShortcut(Context context, File clickedFile) {
         boolean isPinnedShortcutSupported = false;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ShortcutManager shortcutManager = (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
-            if (shortcutManager != null && shortcutManager.isRequestPinShortcutSupported())
-                isPinnedShortcutSupported = true;
-        }
 
         ShortcutFile file = new ShortcutFile(clickedFile);
 
